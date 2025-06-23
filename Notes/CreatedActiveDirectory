@@ -1,0 +1,109 @@
+---
+
+# Active Directory Setup and Configuration on Windows Server
+
+## Summary
+
+This project documents the full setup and configuration of an Active Directory (AD) Domain Controller on a Windows Server machine as part of my preparation for the **Active Directory penetration testing module** of the **eCPPT** course. The goal was to understand the structure, roles, and potential misconfigurations in an AD environment from the defender’s perspective before approaching it offensively.
+
+---
+
+## Environment Setup
+
+* **Platform:** Windows Server (GUI)
+* **Objective:** Promote the server to a domain controller and configure a new AD forest
+* **Tools used:**
+
+  * Server Manager
+  * PowerShell (`net user`, `Get-ADUser`)
+  * Active Directory Users and Computers (ADUC)
+
+---
+
+## Steps Taken
+
+### 1. Rename Computer (Pre-Deployment)
+
+* Renamed the server to reflect its role as a Domain Controller
+* Restarted the system to apply the name change
+* Confirmed hostname change via System Info
+
+### 2. Install Active Directory Domain Services
+
+* Opened **Server Manager** > **Manage** > **Add Roles and Features**
+* Selected **Active Directory Domain Services (AD DS)**
+* Installation completed after a few minutes
+
+### 3. Post-Deployment Configuration
+
+* Promoted the server to a **Domain Controller**
+* Created a **new forest** with a custom root domain name
+* Configured:
+
+  * Domain Controller capabilities
+  * Directory Services Restore Mode (DSRM) password
+  * NETBIOS name
+* Finalized and installed
+* System automatically restarted
+
+### 4. Verification
+
+* Verified:
+
+  * Computer name
+  * Full computer name
+  * Domain membership
+* Group Policy Client initialized on boot
+
+---
+
+## Managing Users, Groups, and Computers
+
+* Opened **Server Manager** > **Tools** > **Active Directory Users and Computers**
+* Reviewed AD structure:
+
+  * Builtin, Computers, Domain Controllers, Users
+  * Confirmed the domain controller was listed under "Domain Controllers"
+* Created a new user with:
+
+  * Full name
+  * Logon name
+  * Password (within policy requirements)
+* Created a new group and added the user to it
+
+### PowerShell Verification
+
+```powershell
+net user <username>
+Get-ADUser -Identity <username> -Properties *
+```
+
+---
+
+## Misconfiguration Exploration
+
+* Disabled **Kerberos preauthentication** on the user account to demonstrate vulnerability to **AS-REP Roasting**
+* Highlighted how basic misconfigurations in account settings can expose an environment
+* Reviewed **Password Policies**, **Account Lockout Policies**, and **Remote Access settings**
+
+---
+
+## Lessons Learned
+
+* Setting up AD manually gives insight into how environments are built and where misconfigurations happen
+* Many security issues stem from default or overly permissive settings
+* Understanding the administrative structure of AD will directly support offensive operations during red team assessments
+
+---
+
+## Next Steps
+
+* Begin the **Active Directory Penetration Testing** section of the eCPPT course
+* Use this AD lab environment to practice techniques such as:
+
+  * Kerberoasting
+  * AS-REP Roasting
+  * Pass-the-Hash / Pass-the-Ticket
+  * Lateral movement using PowerShell Remoting and WMI
+
+---
